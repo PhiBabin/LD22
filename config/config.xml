@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<img>
+	<anim name="player" path="img/player.png" nbrCollums="4" nbrLines="1" />
+	<sprite name="mobs" path="img/mobs.png" nbrCollums="1" nbrLines="1" />
+	<sprite name="bullet" path="img/bullet.png" nbrCollums="1" nbrLines="1" />
+	<anim name="boom" path="img/boom.png" nbrCollums="5" nbrLines="1" />
+	<anim name="flag" path="img/flag2.png" nbrCollums="4" nbrLines="1" />
+</img>
+<enemies>
+	<mob name="killyou" type="1" path="0" x="0" y="0" width="13" height="8" />
+	<mob name="truc" type="2" path="1" x="0" y="8" width="9" height="15" />
+</enemies>
+<items>
+	<item name="blueflag" type="1" path="0" x="0" y="0" width="13" height="8" color="3"/>
+</items>
+<sound>
+	<wav name="jump" path="sounds/jump.wav" />
+</sound>
+<config>
+	<option name="screenwidth" value="600" />
+	<option name="screenheight" value="600" />
+
+	<option name="platwidth" value="30" />
+	<option name="platheight" value="30" />
+
+	<option name="tilewidth" value="10" />
+	<option name="tileheight" value="10" />
+
+	<option name="playercollwidth" value="6" />
+	<option name="playercollheight" value="9" />
+
+	<option name="gravity" value="250" />
+	<option name="jump" value="-150" />
+	<option name="starthp" value="3" />
+	<option name="level" value="1" />
+</config>
