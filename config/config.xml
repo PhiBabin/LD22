@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <img>
 	<anim name="player" path="img/player1.png" nbrCollums="1" nbrLines="1" />
+	<anim name="key" path="img/clavier.png" nbrCollums="1" nbrLines="3" />
 </img>
 <!--<enemies>
 	<mob name="killyou" type="1" path="0" x="0" y="0" width="13" height="8" />
@@ -13,7 +14,7 @@
 	<!--<wav name="jump" path="sounds/jump.wav" />-->
 </sound>
 <config>
-	<option name="screenwidth" value="600" />
+	<option name="screenwidth" value="500" />
 	<option name="screenheight" value="600" />
 
 	<option name="platwidth" value="30" />

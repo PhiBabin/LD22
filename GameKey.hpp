@@ -15,22 +15,24 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
-#include "includes.hpp"
+#ifndef KEYY_HPP_INCLUDED
+#define KEYY_HPP_INCLUDED
+struct Key{
+    //! Propriétés
+    sf::Sprite key;
+    sf::IntRect rect;
+    sf::Keyboard::Key car;
+	//! Propriété pour de son état
+	int state;};
+class GameKey{
+    public:
+        GameKey();
+        void AddKey(sf::Keyboard::Key name, float x1, float y1, float x2, float y2);
+        void PressKey(int id);
 
-int main(){
-   cout<<"  /App Main::Start"<<endl;
-
-   cout<<"  /App Main::Ressources Loading"<<endl;
-   GameConfig::LoadConfig();
-
-   cout<<"  /App Main::Creating window"<<endl;
-    sf::RenderWindow App(sf::VideoMode(GameConfig::g_config["screenwidth"], GameConfig::g_config["screenheight"], 32), "LD22 - Alone", sf::Style::Close | sf::Style::Titlebar );
-
-    App.EnableVerticalSync(true);
-
-    cout<<"  /GameEngine  Start"<<endl;
-    GameEngine *Game(0);
-    Game=new GameEngine(App);
-    delete Game;
-
-}
+        void Draw(sf::RenderWindow *App, sf::Vector2f camera);
+        ~GameKey();
+    private:
+       vector<Key> m_key;
+};
+#endif

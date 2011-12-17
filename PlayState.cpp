@@ -38,6 +38,20 @@ PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0)
     m_mapEntity=m_map->GetMapEntity();
     m_player->m_listObject=m_mapBullet;
 
+    m_key=new GameKey();
+    m_key->AddKey(sf::Keyboard::Q,0,0,40,43);
+    m_key->AddKey(sf::Keyboard::W,40,0,81,43);
+    m_key->AddKey(sf::Keyboard::E,81,0,123,43);
+    m_key->AddKey(sf::Keyboard::R,123,0,164,43);
+    m_key->AddKey(sf::Keyboard::T,164,0,206,43);
+    m_key->AddKey(sf::Keyboard::Y,206,0,246,43);
+    m_key->AddKey(sf::Keyboard::U,246,0,288,43);
+    m_key->AddKey(sf::Keyboard::I,288,0,330,43);
+    m_key->AddKey(sf::Keyboard::O,330,0,372,43);
+    m_key->AddKey(sf::Keyboard::P,372,0,414,43);
+    //!-----
+    m_key->AddKey(sf::Keyboard::A,10,43,49,84);
+
     m_camera = m_gameEngine->m_app.GetDefaultView();
     m_camera.Zoom(0.25);
      m_gameEngine->m_app.SetView(m_camera);
@@ -91,7 +105,10 @@ void PlayState::loop(){
 //    movePlayer(*m_player);
 
  //! Déplacement de la caméra
-    m_camera.SetCenter(m_player->GetPosition());
+
+    m_camera.SetCenter(m_player->GetPosition().x+50.f,
+                       m_player->GetPosition().y+50.f
+                       );
     m_gameEngine->m_app.SetView(m_camera);
 // //! Déplacement des objets
 //    moveObject();
@@ -136,6 +153,7 @@ void PlayState::GetEvents(sf::Event){
 **/
 void PlayState::draw(){
     m_map->Draw();
+    m_key->Draw(&(*m_gameEngine).m_app,m_camera.GetCenter());
 }
 /**
     Déplacement des Mobs

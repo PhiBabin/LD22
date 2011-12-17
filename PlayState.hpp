@@ -38,6 +38,8 @@ class PlayState: public GameState {
         sf::View m_camera;
         bool m_start;
 
+        GameKey *m_key;
+
         vector<GameEntity*> *m_mapEntity;
         vector<GameMob*> *m_mapMob;
         vector<GameBullet*> *m_mapBullet;

@@ -73,6 +73,7 @@ using namespace std;
 #include "GameItem.hpp"
 #include "GameMob.hpp"
 #include "GameBullet.hpp"
+#include "GameKey.hpp"
 
 #include "Player.hpp"
 #include "Map.hpp"
@@ -82,6 +83,7 @@ using namespace std;
 #include "GameItem.cpp"
 #include "GameMob.cpp"
 #include "GameBullet.cpp"
+#include "GameKey.cpp"
 
 #include "Player.cpp"
 #include "Map.cpp"
