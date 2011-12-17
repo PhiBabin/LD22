@@ -2,6 +2,8 @@
 <img>
 	<anim name="player" path="img/player1.png" nbrCollums="1" nbrLines="1" />
 	<anim name="key" path="img/clavier.png" nbrCollums="1" nbrLines="3" />
+	<anim name="items" path="img/items.png" nbrCollums="1" nbrLines="2" />
+	<anim name="explosion" path="img/explosion.png" nbrCollums="6" nbrLines="3" />
 </img>
 <!--<enemies>
 	<mob name="killyou" type="1" path="0" x="0" y="0" width="13" height="8" />

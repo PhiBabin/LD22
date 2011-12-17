@@ -51,6 +51,26 @@ PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0)
     m_key->AddKey(sf::Keyboard::P,372,0,414,43);
     //!-----
     m_key->AddKey(sf::Keyboard::A,10,43,49,84);
+    m_key->AddKey(sf::Keyboard::S,49,43,91,84);
+    m_key->AddKey(sf::Keyboard::D,91,43,132,84);
+    m_key->AddKey(sf::Keyboard::F,132,43,174,84);
+    m_key->AddKey(sf::Keyboard::G,174,43,215,84);
+    m_key->AddKey(sf::Keyboard::H,215,43,257,84);
+    m_key->AddKey(sf::Keyboard::J,257,43,300,84);
+    m_key->AddKey(sf::Keyboard::K,300,43,340,84);
+    m_key->AddKey(sf::Keyboard::L,340,43,384,84);
+    //!-----
+    m_key->AddKey(sf::Keyboard::Z,27,84,70,125);
+    m_key->AddKey(sf::Keyboard::X,70,84,111,125);
+    m_key->AddKey(sf::Keyboard::C,111,84,151,125);
+    m_key->AddKey(sf::Keyboard::V,151,84,193,125);
+    m_key->AddKey(sf::Keyboard::B,193,84,235,125);
+    m_key->AddKey(sf::Keyboard::N,235,84,278,125);
+    m_key->AddKey(sf::Keyboard::M,278,84,319,125);
+
+    srand((unsigned)time(0));
+    m_key->Reload();
+
 
     m_camera = m_gameEngine->m_app.GetDefaultView();
     m_camera.Zoom(0.25);
@@ -83,7 +103,8 @@ void PlayState::loop(){
     if (sf::Keyboard::IsKeyPressed(sf::Keyboard::M))m_player->Jump();
     m_player->TurnUp(sf::Keyboard::IsKeyPressed(sf::Keyboard::W));
     m_player->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::A),sf::Keyboard::IsKeyPressed(sf::Keyboard::D));
-    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::N))m_player->Shoot();
+    //if(sf::Keyboard::IsKeyPressed(sf::Keyboard::N))m_player->Shoot();
+    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Return))m_key->Reload();
 
 
 //    const sf::Input &Input =m_gameEngine->m_app.GetInput();

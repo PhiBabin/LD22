@@ -23,16 +23,27 @@ struct Key{
     sf::IntRect rect;
     sf::Keyboard::Key car;
 	//! Propriété pour de son état
-	int state;};
+	int state;
+	bool visible;
+
+	bool bomb;
+	bool atomBomb;
+	bool reveal;
+	bool heart;
+	bool shoot;
+	bool jump;};
 class GameKey{
     public:
         GameKey();
         void AddKey(sf::Keyboard::Key name, float x1, float y1, float x2, float y2);
         void PressKey(int id);
+        void Reload();
 
         void Draw(sf::RenderWindow *App, sf::Vector2f camera);
         ~GameKey();
+        vector<GameAnim*> m_listObject;
     private:
        vector<Key> m_key;
+       vector<ImgAnim> m_icon;
 };
 #endif
