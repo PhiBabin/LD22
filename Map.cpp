@@ -34,18 +34,7 @@ Type MapTile::Tile(float x, float y) {
     }
 }
 
-void MapTile::PlanteauTransition(sf::Vector2i n) {
-    m_currentPlateau=n;
 
-    //! On remet les tiles dans leur état d'origine
-    m_tileSet=m_blankTileSet;
-    //! On efface les animations
-    m_mapEntity.erase(m_mapEntity.begin(),m_mapEntity.end());
-    //! On efface les balles
-    m_mapBullet.erase(m_mapBullet.begin(),m_mapBullet.end());
-    //! On recharge les mobs
-    RespawnMob();
-}
 void MapTile::RespawnMob() {
     while (0!=m_mapMob.size()) {
         delete m_mapMob.at(0);
@@ -112,9 +101,6 @@ vector<GameMob*> * MapTile::GetMapMob() {
 vector<GameBullet*> * MapTile::GetMapBullet() {
     return &m_mapBullet;
 }
-sf::Vector2i MapTile::GetPlateau() {
-    return m_currentPlateau;
-}
 
 bool MapTile::CollisionGeneral(const sf::FloatRect entityRect,int color=0) {
     int maxHeight, minHeight, maxWidth, minWidth;
@@ -148,25 +134,20 @@ void MapTile::Draw() {
     m_app->Draw(sf::Sprite(m_background.GetTexture()));
     //! On affiche la map
     //m_app->Draw(sf::Sprite(m_map.GetTexture()));
-    float alphaLevel=0;
-    int xmin=m_currentPlateau.x*GameConfig::g_config["platwidth"];
-    int ymin=m_currentPlateau.y*GameConfig::g_config["platheight"];
-    int xmax=xmin+GameConfig::g_config["platwidth"];
-    int ymax=ymin+GameConfig::g_config["platheight"];
-    for (int y=ymin;y<ymax;y++) {
-        for (int x=xmin;x<xmax;x++) {
-            if (m_tileSet[x][y].fall && m_tileSet[x][y].touch) {
-                alphaLevel=m_tileSet[x][y].tile.GetColor().a - 0.4*m_app->GetFrameTime();
-                if (alphaLevel<0){
-                    alphaLevel=0;
-                    m_tileSet[x][y].solid=false;
-                }
-                m_tileSet[x][y].tile.SetColor(sf::Color(255,255,255,alphaLevel));
-            }
-            if (m_tileSet[x][y].isExploded && m_tileSet[x][y].boom.GetElapsedTime()>=125) {
-                Explode(x,y);
-                m_tileSet[x][y]=m_typeList[VIDE];
-            }
+    for (int y=0;y<m_height;y++) {
+        for (int x=0;x<m_width;x++) {
+//            if (m_tileSet[x][y].fall && m_tileSet[x][y].touch) {
+//                alphaLevel=m_tileSet[x][y].tile.GetColor().a - 0.4*m_app->GetFrameTime();
+//                if (alphaLevel<0){
+//                    alphaLevel=0;
+//                    m_tileSet[x][y].solid=false;
+//                }
+//                m_tileSet[x][y].tile.SetColor(sf::Color(255,255,255,alphaLevel));
+//            }
+//            if (m_tileSet[x][y].isExploded && m_tileSet[x][y].boom.GetElapsedTime()>=125) {
+//                Explode(x,y);
+//                m_tileSet[x][y]=m_typeList[VIDE];
+//            }
             if ((m_tileSet.at(x)).at(y).visible) {
                 m_app->Draw(m_tileSet.at(x).at(y).tile);
             }
@@ -191,10 +172,10 @@ void MapTile::Draw() {
             m_app->Draw(*(m_mapEntity.at(i)));
         }
     }
-    //! On affiche les flags de la carte
-    for (unsigned int i=0;i<m_flag.size();i++) {
-        m_app->Draw(*(m_flag.at(i)));
-    }
+//    //! On affiche les flags de la carte
+//    for (unsigned int i=0;i<m_flag.size();i++) {
+//        m_app->Draw(*(m_flag.at(i)));
+//    }
     //! On affiche les balles de la carte
     for (unsigned int i=0;i<m_mapBullet.size();i++) {
         if ((m_mapBullet.at(i))->isDelete()) {
@@ -208,10 +189,6 @@ void MapTile::Draw() {
     //! On affiche le personnage et ces éléments
     m_app->Draw(*m_player);
     m_player->Drawing();
-    //! On change le plateau
-    sf::Vector2i newPlateau((m_player->GetPosition().x+GameConfig::g_config["playercollwidth"]/2)/(GameConfig::g_config["platwidth"]*GameConfig::g_config["tilewidth"]),
-                            (m_player->GetPosition().y+GameConfig::g_config["playercollheight"]/2)/(GameConfig::g_config["platheight"]*GameConfig::g_config["tilewidth"]));
-    if (newPlateau!=m_currentPlateau)PlanteauTransition(newPlateau);
 }
 
 void MapTile::LoadMap() {
@@ -307,26 +284,8 @@ void MapTile::LoadMap() {
             sf::Vector2f spawnLocationOne(atoi(pElem->Attribute("x")),atoi(pElem->Attribute("y"))-GameConfig::g_config["playercollheight"]);
             m_spawnLocationOne=spawnLocationOne;
             m_player->SetPosition(m_spawnLocationOne);
-            m_currentPlateau= sf::Vector2i(m_spawnLocationOne.x/GameConfig::g_config["platwidth"],m_spawnLocationOne.y/GameConfig::g_config["platheight"]);
         }
 
-        //! Flags
-        if (string(pElem->Attribute("type"))=="flag") {
-            GameItem* newFlag= new GameItem(GameConfig::GameConfig::g_imgManag["flag"].img,
-                                            GameConfig::GameConfig::g_imgManag["flag"].nbrCollum,
-                                            GameConfig::GameConfig::g_imgManag["flag"].nbrLine,0);
-            newFlag->SetPosition(atoi(pElem->Attribute("x")) ,atoi(pElem->Attribute("y")));
-            elemProp=TiXmlHandle(pElem).FirstChild("properties").FirstChild().Element();
-            for (; elemProp; elemProp=elemProp->NextSiblingElement()) {
-                if (string(elemProp->Attribute("name"))=="color") {
-                    newFlag->SetColor( GameConfig::NbrToColor( atoi( elemProp->Attribute("value") ) ) );
-                }
-            }
-            newFlag->loop(true);
-            newFlag->setDelay(0.15);
-            newFlag->play();
-            m_flag.push_back(newFlag);
-        }
 
         //! Mobs
         if (string(pElem->Attribute("type"))=="mob") {
@@ -391,10 +350,6 @@ void MapTile::LoadMap() {
         i++;
     }
     m_blankTileSet=m_tileSet;
-
-    //! On position le plateau
-    m_currentPlateau = sf::Vector2i((m_player->GetPosition().x+GameConfig::g_config["playercollwidth"]/2)/(GameConfig::g_config["platwidth"]*GameConfig::g_config["tilewidth"]),
-                                    (m_player->GetPosition().y+GameConfig::g_config["playercollheight"]/2)/(GameConfig::g_config["platheight"]*GameConfig::g_config["tilewidth"]));
 }
 MapTile::~MapTile() {
     for (unsigned int i=0;i<m_mapEntity.size();i++) {

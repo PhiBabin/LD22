@@ -16,7 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
 #include "GameEngine.hpp"
-GameEngine::GameEngine(sf::RenderWindow &app):m_app(app),m_running(true){
+GameEngine::GameEngine(sf::RenderWindow &app):m_app(app),m_running(true),m_vip(0){
     init();
     loop();
 }
@@ -25,9 +25,7 @@ GameEngine::GameEngine(sf::RenderWindow &app):m_app(app),m_running(true){
 **/
 void GameEngine::init(){
    cout<<"  /GameStates::Init"<<endl;
-    m_gameState.push_back(NULL);
     m_gameState.push_back(new PlayState(this));
-    m_gameState[0]=m_gameState[1];
 }
 /**
     Boucle du Moteur
@@ -44,21 +42,21 @@ void GameEngine::loop(){
                     m_running=false;
                     break;
                   case sf::Event::GainedFocus:  //! Window gained focus
-                    m_gameState[0]->resume();
+                    m_gameState[m_vip]->resume();
                     break;
                   case sf::Event::LostFocus:    //! Window lost focus
-                    m_gameState[0]->pause();
+                    m_gameState[m_vip]->pause();
                     break;
                   case sf::Event::Resized:      //! Window resized
                     break;
                   default:                      //! Current active state will handle
-                    m_gameState[0]->GetEvents(event);
+                    m_gameState[m_vip]->GetEvents(event);
               }
         }
-        m_gameState[0]->loop();
+        m_gameState[m_vip]->loop();
         m_app.Clear(sf::Color(183, 210, 215, 255));
 
-        m_gameState[0]->draw();
+        m_gameState[m_vip]->draw();
         m_app.Display();
     }
     m_app.Close();
@@ -69,7 +67,7 @@ void GameEngine::loop(){
 **/
 void GameEngine::changeState(unsigned int frontState){
     if(frontState<m_gameState.size()){
-        m_gameState[0]=m_gameState[frontState];
+        m_gameState[m_vip]=m_gameState[frontState];
     }
 
 }

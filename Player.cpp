@@ -21,10 +21,9 @@ ImgAnim::ImgAnim(GameConfig::g_imgManag["player"].img,GameConfig::g_imgManag["pl
 ,m_hp(GameConfig::g_config["starthp"])
 ,m_app(App)
 ,m_map(map)
-,m_velx(0),m_vely(0),m_selected(6),
+,m_velx(0),m_vely(0),
 m_jumpLock(false),m_colBot(false),m_hurting(false),m_direction(false),m_lookUp(false),m_moving(false)
 {
-    for(int i=0;i<=6;i++)m_colors.push_back(false);
     m_listObject=(*m_map)->GetMapBullet();
    pause();
 }
@@ -267,24 +266,11 @@ void Player::Shoot(){
         m_listObject->push_back(new GameBullet(GameConfig::GameConfig::g_imgManag["bullet"].img,GameConfig::GameConfig::g_imgManag["bullet"].nbrCollum,GameConfig::GameConfig::g_imgManag["bullet"].nbrLine,10,this,velx,vely,true));
         m_listObject->back()->SetPosition(GetPosition().x,GetPosition().y+GameConfig::g_config["playercollheight"]/4);
         //m_listObject->back()->setDelay(0.1);
-        m_listObject->back()->SetColor(GameConfig::NbrToColor(m_selected));
         m_lastShot.Reset();
     }
 }
-void Player::AddColor(int newColor){
-    if(newColor>0&&m_colors.size()>newColor){
-        m_colors.at(newColor)=true;
-    }
-}
-void Player::SwitchColor(int newColor){
-    if(newColor>0&&m_colors.size()>newColor){
-        if(m_colors.at(newColor))m_selected=newColor;
-    }
-    else {
-        cout<<"These are not the droids that your are looking for.";
-        exit(0);
-    }
-}
+
+
 void Player::Drawing(){
 
     SetColor(sf::Color::White);

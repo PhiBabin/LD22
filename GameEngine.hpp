@@ -28,6 +28,7 @@ class GameEngine{
        vector<GameState*> m_gameState;
    private:
     bool m_running;
+    int m_vip;
 };
 
 #endif

@@ -26,12 +26,6 @@ PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0)
 
 
     m_player= new Player(&(*m_gameEngine).m_app,&m_map);
-    m_player->AddColor(1);
-    m_player->AddColor(2);
-    m_player->AddColor(3);
-    m_player->AddColor(4);
-    m_player->AddColor(5);
-    m_player->AddColor(6);
 
     GameEntity::m_map=&m_map;
     GameEntity::m_app=&(*m_gameEngine).m_app;
@@ -42,10 +36,10 @@ PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0)
     m_mapBullet=m_map->GetMapBullet();
 
     m_mapEntity=m_map->GetMapEntity();
-    m_player->SetMapObject(m_mapBullet);
+    m_player->m_listObject=m_mapBullet;
 
     m_camera = m_gameEngine->m_app.GetDefaultView();
-    m_camera.Zoom(0.5);
+    m_camera.Zoom(0.25);
      m_gameEngine->m_app.SetView(m_camera);
 }
 /**
@@ -77,12 +71,6 @@ void PlayState::loop(){
     m_player->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::A),sf::Keyboard::IsKeyPressed(sf::Keyboard::D));
     if(sf::Keyboard::IsKeyPressed(sf::Keyboard::N))m_player->Shoot();
 
-    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Num1))m_player->SwitchColor(1);
-    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Num2))m_player->SwitchColor(2);
-    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Num3))m_player->SwitchColor(3);
-    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Num4))m_player->SwitchColor(4);
-    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Num5))m_player->SwitchColor(5);
-    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Num6))m_player->SwitchColor(6);
 
 //    const sf::Input &Input =m_gameEngine->m_app.GetInput();
 //
@@ -103,20 +91,14 @@ void PlayState::loop(){
 //    movePlayer(*m_player);
 
  //! Déplacement de la caméra
-  //  m_gameEngine->m_app.SetView(sf::View(m_player->GetViewRect()));
-//    m_camera.SetCenter(sf::Vector2f(m_map->GetPlateau().x*GameConfig::g_config["platwidth"]*GameConfig::g_config["tilewidth"]+GameConfig::g_config["screenwidth"]/2,
-//                        m_map->GetPlateau().y*GameConfig::g_config["platheight"]*GameConfig::g_config["tileheight"]));
-    m_camera=sf::View(sf::FloatRect(m_map->GetPlateau().x*GameConfig::g_config["platwidth"]*GameConfig::g_config["tilewidth"],
-                    m_map->GetPlateau().y*GameConfig::g_config["platheight"]*GameConfig::g_config["tileheight"],
-                    GameConfig::g_config["screenwidth"]/2,
-                    GameConfig::g_config["screenheight"]/2));
+    m_camera.SetCenter(m_player->GetPosition());
     m_gameEngine->m_app.SetView(m_camera);
- //! Déplacement des objets
-    moveObject();
- //! Déplacement des mobs
-    moveMob();
- //! Déplacement des mobs
-    moveBullet();
+// //! Déplacement des objets
+//    moveObject();
+// //! Déplacement des mobs
+//    moveMob();
+// //! Déplacement des mobs
+//    moveBullet();
 }
 /**
     Pause le jeu
