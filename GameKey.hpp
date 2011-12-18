@@ -34,10 +34,12 @@ struct Key{
 	bool jump;};
 class GameKey{
     public:
-        GameKey();
+        GameKey(Player *player);
         void AddKey(sf::Keyboard::Key name, float x1, float y1, float x2, float y2);
         void PressKey(int id);
         void Reload();
+        void AddShoot();
+        void AddJump();
 
         void Draw(sf::RenderWindow *App, sf::Vector2f camera);
         ~GameKey();
@@ -45,5 +47,6 @@ class GameKey{
     private:
        vector<Key> m_key;
        vector<ImgAnim> m_icon;
+        Player *m_player;
 };
 #endif

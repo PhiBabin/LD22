@@ -38,7 +38,7 @@ PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0)
     m_mapEntity=m_map->GetMapEntity();
     m_player->m_listObject=m_mapBullet;
 
-    m_key=new GameKey();
+    m_key=new GameKey(m_player);
     m_key->AddKey(sf::Keyboard::Q,0,0,40,43);
     m_key->AddKey(sf::Keyboard::W,40,0,81,43);
     m_key->AddKey(sf::Keyboard::E,81,0,123,43);
@@ -70,11 +70,16 @@ PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0)
 
     srand((unsigned)time(0));
     m_key->Reload();
+    m_key->AddJump();
+    m_key->AddShoot();
 
 
     m_camera = m_gameEngine->m_app.GetDefaultView();
     m_camera.Zoom(0.25);
      m_gameEngine->m_app.SetView(m_camera);
+
+     m_interface.SetTexture(GameConfig::g_imgManag["interface"].img);
+     m_interface.SetScale(0.25,0.25);
 }
 /**
     Initialisation des éléments du jeu
@@ -100,11 +105,11 @@ void PlayState::loop(){
 
 
     //! Control du joueur 1
-    if (sf::Keyboard::IsKeyPressed(sf::Keyboard::M))m_player->Jump();
-    m_player->TurnUp(sf::Keyboard::IsKeyPressed(sf::Keyboard::W));
+//    if (sf::Keyboard::IsKeyPressed(sf::Keyboard::M))m_player->Jump();
+//    m_player->TurnUp(sf::Keyboard::IsKeyPressed(sf::Keyboard::W));
     m_player->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::A),sf::Keyboard::IsKeyPressed(sf::Keyboard::D));
-    //if(sf::Keyboard::IsKeyPressed(sf::Keyboard::N))m_player->Shoot();
-    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Return))m_key->Reload();
+//    //if(sf::Keyboard::IsKeyPressed(sf::Keyboard::N))m_player->Shoot();
+//    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Return))m_key->Reload();
 
 
 //    const sf::Input &Input =m_gameEngine->m_app.GetInput();
@@ -128,9 +133,10 @@ void PlayState::loop(){
  //! Déplacement de la caméra
 
     m_camera.SetCenter(m_player->GetPosition().x+50.f,
-                       m_player->GetPosition().y+50.f
+                       m_player->GetPosition().y+30.f
                        );
     m_gameEngine->m_app.SetView(m_camera);
+    m_interface.SetPosition(m_camera.GetCenter().x-62, m_camera.GetCenter().y-21+23);
 // //! Déplacement des objets
 //    moveObject();
 // //! Déplacement des mobs
@@ -174,6 +180,8 @@ void PlayState::GetEvents(sf::Event){
 **/
 void PlayState::draw(){
     m_map->Draw();
+
+    m_gameEngine->m_app.Draw(m_interface);
     m_key->Draw(&(*m_gameEngine).m_app,m_camera.GetCenter());
 }
 /**

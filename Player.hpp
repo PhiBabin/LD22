@@ -66,6 +66,7 @@ class Player:public ImgAnim{
     private:
         sf::RenderWindow *m_app;
         MapTile **m_map;
+        sf::Sprite m_flashlight;
 
         int m_hp;
         float m_velx;

@@ -24,8 +24,10 @@ ImgAnim::ImgAnim(GameConfig::g_imgManag["player"].img,GameConfig::g_imgManag["pl
 ,m_velx(0),m_vely(0),
 m_jumpLock(false),m_colBot(false),m_hurting(false),m_direction(false),m_lookUp(false),m_moving(false)
 {
+    m_flashlight.SetTexture(GameConfig::g_imgManag["flashlight"].img);
     m_listObject=(*m_map)->GetMapBullet();
    pause();
+    setDelay(0.1);
 }
 void Player::MovePlayer(){
     float movHor=0;
@@ -131,12 +133,7 @@ void Player::TurnUp(bool up){
 }
 void Player::Turn(bool left, bool right){
 
-    if(left&&!right){
-        m_moving=true;
-        m_direction=GAUCHE;
-        m_velx=-50;
-    }
-    else if(!left&&right){
+    if(!left&&right){
         m_moving=true;
         m_direction=DROITE;
         m_velx=50;
@@ -147,6 +144,8 @@ void Player::Turn(bool left, bool right){
         else m_velx=0;
     }
     FlipX(m_direction);
+    if(m_moving)play();
+    else stop();
 }
  bool Player::CollisionGeneral(const sf::FloatRect playerRect,bool &kill){
     int maxHeight, minHeight, maxWidth, minWidth;
@@ -287,6 +286,9 @@ void Player::Drawing(){
             SetColor(sf::Color::Color(255,255,255,128));
       }
     }
+    m_flashlight.SetPosition(GetPosition());
+    m_flashlight.Move(9,-10);
+    m_app->Draw(m_flashlight);
     //! Trainé
    // if(m_shadow.GetElapsedTime()>100){
 //        m_listObject->push_back(new GameAnim(GameConfig::g_imgManag["player"].img,GameConfig::GameConfig::g_imgManag["player"].nbrCollum,GameConfig::GameConfig::g_imgManag["player"].nbrLine));

@@ -36,6 +36,7 @@ class PlayState: public GameState {
         Player *m_player;
         MapTile *m_map;
         sf::View m_camera;
+        sf::Sprite m_interface;
         bool m_start;
 
         GameKey *m_key;
