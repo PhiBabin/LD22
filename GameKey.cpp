@@ -21,12 +21,6 @@ void GameKey::PressKey(int id){
 
     if(m_key[id].state==0){
         m_key[id].state=1;
-        if(!(m_key[id].shoot||m_key[id].jump)){
-            m_key[id].key.SetSubRect( sf::IntRect( m_key[id].rect.Left, m_key[id].rect.Top+125.f,m_key[id].rect.Width, m_key[id].rect.Height) ) ;
-        }
-        else{
-            m_key[id].key.SetSubRect( sf::IntRect( m_key[id].rect.Left, m_key[id].rect.Top+250.f,m_key[id].rect.Width, m_key[id].rect.Height) ) ;
-        }
 
          if(m_key[id].bomb){
 
@@ -84,7 +78,7 @@ void GameKey::PressKey(int id){
          }
          if(m_key[id].heart){
              m_key[id].heart=false;
-             m_player->Degat(-1);
+             m_player->Degat(-2);
          }
 
          if(m_key[id].atomBomb){
@@ -128,14 +122,13 @@ void GameKey::Reload(){
         m_key[i].visible=false;
 
         pItem=rand() % 100 + 1;
-        cout<<pItem<<endl;
-        if(pItem>=0 && pItem<30){
+        if(pItem>=0 && pItem<40){
             m_key[i].reveal=true;
         }
-        if(pItem>=30 && pItem<35){
+        if(pItem>=40 && pItem<45){
             m_key[i].atomBomb=true;
         }
-        if(pItem>=40 && pItem<60){
+        if(pItem>=50 && pItem<60){
             m_key[i].heart=true;
         }
         if(pItem>=60 && pItem<90){
@@ -146,7 +139,7 @@ void GameKey::Reload(){
 }
 
 void GameKey::AddShoot(){
-    int luckyOne=rand() % m_key.size() +1;
+    int luckyOne=rand() % m_key.size() ;
     if(!m_key[luckyOne].jump){
         m_key[luckyOne].atomBomb=false;
         m_key[luckyOne].bomb=false;
@@ -161,7 +154,7 @@ void GameKey::AddShoot(){
     }
 }
 void GameKey::AddJump(){
-    int luckyOne=rand() % m_key.size() +1;
+    int luckyOne=rand() % m_key.size() ;
     if(!m_key[luckyOne].shoot){
         m_key[luckyOne].atomBomb=false;
         m_key[luckyOne].bomb=false;
@@ -179,12 +172,27 @@ void GameKey::AddJump(){
 void GameKey::Draw(sf::RenderWindow *App, sf::Vector2f camera){
     for(int i=0;i<m_key.size();i++){
         if(sf::Keyboard::IsKeyPressed( m_key[i].car)){
-            PressKey(i);
             if(m_key[i].shoot){
-                m_player->Shoot();
+                if(m_player->m_flash) m_player->Shoot();
+                else m_player->m_flash=true;
+
             }
-            if(m_key[i].jump){
+            else if(m_key[i].jump){
                 m_player->Jump();
+            }
+            else{
+                if(m_key[i].state==0)m_player->Degat(1);
+
+            }
+            PressKey(i);
+        }
+
+        if(m_key[i].state==1){
+            if(!(m_key[i].shoot||m_key[i].jump)){
+                m_key[i].key.SetSubRect( sf::IntRect( m_key[i].rect.Left, m_key[i].rect.Top+125.f,m_key[i].rect.Width, m_key[i].rect.Height) ) ;
+            }
+            else{
+                m_key[i].key.SetSubRect( sf::IntRect( m_key[i].rect.Left, m_key[i].rect.Top+250.f,m_key[i].rect.Width, m_key[i].rect.Height) ) ;
             }
         }
 

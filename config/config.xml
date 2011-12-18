@@ -10,15 +10,22 @@
 	<anim name="lifebar" path="img/lifebar.png" nbrCollums="1" nbrLines="7" />
 	<anim name="main_menu" path="img/main_menu.png" nbrCollums="1" nbrLines="1" />
 	<anim name="press" path="img/press.png" nbrCollums="1" nbrLines="1" />
+	<anim name="pause" path="img/pause.png" nbrCollums="1" nbrLines="1" />
+	<anim name="end" path="img/end.png" nbrCollums="1" nbrLines="2" />
+	<anim name="mobs" path="img/mobs.png" nbrCollums="1" nbrLines="2" />
+	<anim name="light" path="img/light.png" nbrCollums="1" nbrLines="1" />
 </img>
 <enemies>
-	<mob name="killyou" type="1" path="0" x="0" y="0" width="13" height="8" />
+	<mob name="killyou" type="1" path="0" x="0" y="0" width="18" height="7" />
 </enemies>
 <!--<items>
 	<item name="blueflag" type="1" path="0" x="0" y="0" width="13" height="8" color="3"/>
 </items>-->
 <sound>
-	<!--<wav name="jump" path="sounds/jump.wav" />-->
+	<wav name="jump" path="sounds/jump.wav" />
+	<wav name="dead" path="sounds/dead.wav" />
+	<wav name="levelup" path="sounds/levelup.wav" />
+	<wav name="walking" path="sounds/walking.wav" />
 </sound>
 <config>
 	<option name="screenwidth" value="500" />

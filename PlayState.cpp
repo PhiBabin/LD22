@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
     Construction des éléments du jeu
 **/
 PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0),m_lifebar(GameConfig::g_imgManag["lifebar"].img,GameConfig::g_imgManag["lifebar"].nbrCollum,GameConfig::g_imgManag["lifebar"].nbrLine)
-,m_gameEngine(theGameEngine){
+,m_gameEngine(theGameEngine),m_level(1){
 
 
     m_player= new Player(&(*m_gameEngine).m_app,&m_map);
@@ -70,7 +70,7 @@ PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0),m_lifebar(
 
     srand((unsigned)time(0));
     m_key->Reload();
-    m_key->AddJump();
+    //m_key->AddJump();
     m_key->AddShoot();
 
 
@@ -81,13 +81,24 @@ PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0),m_lifebar(
      m_interface.SetTexture(GameConfig::g_imgManag["interface"].img);
      m_interface.SetScale(0.25,0.25);
 
+     m_light.SetTexture(GameConfig::g_imgManag["light"].img);
+
     m_font.LoadFromFile("font/pixel2.ttf");
 
      m_message.SetColor(sf::Color::White);
-     m_message.SetString(sf::String("Blablabla... Kill the president... Blabla..."));
      m_message.SetFont(m_font);
      m_message.SetCharacterSize(24);
      m_message.Scale(0.25,0.25);
+
+
+    m_music.OpenFromFile("sounds/music.wav");
+    m_music.SetLoop(true);
+    m_music.SetVolume(75);
+    m_music.Play();
+
+    m_dead.SetBuffer(GameConfig::g_soundManag["dead"]);
+    m_levelup.SetBuffer(GameConfig::g_soundManag["levelup"]);
+    m_levelup.SetVolume(75);
 }
 /**
     Initialisation des éléments du jeu
@@ -100,6 +111,43 @@ void PlayState::init(){
     Exécution des éléments
 **/
 void PlayState::loop(){
+    srand((unsigned)time(0));
+
+    if(m_level==1){
+        m_message.SetString("Goal: Turn on your flash light");
+        if(m_player->m_flash){
+            m_levelup.Play();
+            m_level=2;
+            m_key->Reload();
+            m_key->AddJump();
+        }
+    }
+    if(m_level==2){
+        m_message.SetString("Goal: Jump the gap");
+        if(m_player->GetPosition().x>250.f){
+            m_levelup.Play();
+            m_level=3;
+          //  m_key->Reload();
+          //  m_key->AddJump();
+            m_key->AddShoot();
+        }
+    }
+    if(m_level==3){
+        m_message.SetString("Goal: Shoot everything that move");
+        if(m_player->GetPosition().x>880.f){
+            m_levelup.Play();
+            m_level=4;
+        }
+    }
+    if(m_level==4){
+        m_message.SetString("I'm not alone anymore");
+        if(m_player->GetPosition().x>1050.f){
+            m_levelup.Play();
+            m_gameEngine->m_gameState[2]->stop();
+            m_gameEngine->changeState(2);
+        }
+    }
+
 
     if(sf::Keyboard::IsKeyPressed(sf::Keyboard::E))
         cout<<"FPS="<<floor(1.f/(m_gameEngine->m_app.GetFrameTime())*1000)<<endl
@@ -115,9 +163,9 @@ void PlayState::loop(){
     //! Control du joueur 1
 //    if (sf::Keyboard::IsKeyPressed(sf::Keyboard::M))m_player->Jump();
 //    m_player->TurnUp(sf::Keyboard::IsKeyPressed(sf::Keyboard::W));
-    m_player->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::A),sf::Keyboard::IsKeyPressed(sf::Keyboard::D));
+    if(m_level!=1) m_player->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::A),true);
 //    //if(sf::Keyboard::IsKeyPressed(sf::Keyboard::N))m_player->Shoot();
-    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Return))m_key->Reload();
+    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Return))pause();
 
 
 //    const sf::Input &Input =m_gameEngine->m_app.GetInput();
@@ -136,23 +184,30 @@ void PlayState::loop(){
 
  //! Déplacement du personnage 1
     m_player->MovePlayer();
+    if(m_player->IsDead()){
+        m_gameEngine->m_gameState[2]->init();
+        m_gameEngine->changeState(2);
+        m_dead.Play();
+    }
 //    movePlayer(*m_player);
 
  //! Déplacement de la caméra
 
     m_camera.SetCenter(m_player->GetPosition().x+50.f,
-                       m_player->GetPosition().y+30.f
+                       m_player->GetPosition().y+40.f
                        );
     m_gameEngine->m_app.SetView(m_camera);
     m_interface.SetPosition(m_camera.GetCenter().x-62, m_camera.GetCenter().y-21+23);
     m_lifebar.SetPosition(m_camera.GetCenter().x-60, m_camera.GetCenter().y-55);
     m_lifebar.setAnimRow(6-m_player->GetHp());
 
+    m_light.SetPosition(m_camera.GetCenter().x-63, m_camera.GetCenter().y-57);
+
     m_message.SetPosition(m_camera.GetCenter().x-60, m_camera.GetCenter().y+12);
 // //! Déplacement des objets
-//    moveObject();
+    moveObject();
 // //! Déplacement des mobs
-//    moveMob();
+    moveMob();
 // //! Déplacement des mobs
     moveBullet();
 }
@@ -166,7 +221,7 @@ void PlayState::pause(){
         m_mapEntity->at(i)->pause();
     }
     //! On change le state principale
-    m_gameEngine->changeState(2);
+    m_gameEngine->changeState(1);
 }
 /**
     Démarrage après une pause
@@ -191,10 +246,11 @@ void PlayState::GetEvents(sf::Event){
     Affichage des éléments
 **/
 void PlayState::draw(){
-    m_map->Draw();
+    if(m_level!=1)m_map->Draw();
 
     m_gameEngine->m_app.Draw(m_interface);
     m_key->Draw(&(*m_gameEngine).m_app,m_camera.GetCenter());
+    m_gameEngine->m_app.Draw(m_light);
     m_gameEngine->m_app.Draw(m_lifebar);
     m_gameEngine->m_app.Draw(m_message);
 }
@@ -206,7 +262,7 @@ void PlayState::moveMob(){
         sf::FloatRect Rect=m_mapMob->at(i)->GetRect();
 
         if(m_player->GetPlayerRect().Intersects(Rect)){
-            m_player->Degat(2);
+            m_player->Degat(100);
         }
         bool dies=false;
         for(unsigned int v=0;v<m_mapBullet->size()&&!dies;v++){

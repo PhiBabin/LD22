@@ -45,8 +45,8 @@ class GameKey{
         ~GameKey();
         vector<GameAnim*> m_listObject;
     private:
-       vector<Key> m_key;
-       vector<ImgAnim> m_icon;
+        vector<Key> m_key;
+        vector<ImgAnim> m_icon;
         Player *m_player;
 };
 #endif

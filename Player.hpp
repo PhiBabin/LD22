@@ -63,6 +63,8 @@ class Player:public ImgAnim{
         ~Player();
 
         vector<GameBullet*> *m_listObject;
+
+        bool m_flash;
     private:
         sf::RenderWindow *m_app;
         MapTile **m_map;
@@ -78,9 +80,13 @@ class Player:public ImgAnim{
         bool m_lookUp;
         bool m_moving;
 
+        sf::Sound m_jump,m_walking;
+
+
         PausableClock m_lastShot;
         PausableClock m_blink;
         PausableClock m_hurt;
         PausableClock m_shadow;
+        PausableClock m_walkingStop;
 };
 #endif // PLAYER_HPP_INCLUDED

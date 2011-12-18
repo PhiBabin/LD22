@@ -91,6 +91,7 @@ using namespace std;
 #include "GameState.cpp"
 #include "MenuState.cpp"
 #include "PlayState.cpp"
+#include "EndState.cpp"
 #include "GameEngine.cpp"
 
 #endif // INCLUDES_HPP_INCLUDED

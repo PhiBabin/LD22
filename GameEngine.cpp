@@ -16,7 +16,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.*/
 
 #include "GameEngine.hpp"
-GameEngine::GameEngine(sf::RenderWindow &app):m_app(app),m_running(true),m_vip(0){
+GameEngine::GameEngine(sf::RenderWindow &app):m_app(app),m_running(true),m_vip(1){
     init();
     loop();
 }
@@ -26,6 +26,8 @@ GameEngine::GameEngine(sf::RenderWindow &app):m_app(app),m_running(true),m_vip(0
 void GameEngine::init(){
    cout<<"  /GameStates::Init"<<endl;
     m_gameState.push_back(new PlayState(this));
+    m_gameState.push_back(new MenuState(this));
+    m_gameState.push_back(new EndState(this));
 }
 /**
     Boucle du Moteur
@@ -67,7 +69,7 @@ void GameEngine::loop(){
 **/
 void GameEngine::changeState(unsigned int frontState){
     if(frontState<m_gameState.size()){
-        m_gameState[m_vip]=m_gameState[frontState];
+       m_vip=frontState;
     }
 
 }

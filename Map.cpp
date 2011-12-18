@@ -36,13 +36,12 @@ Type MapTile::Tile(float x, float y) {
 
 
 void MapTile::RespawnMob() {
-    while (0!=m_mapMob.size()) {
+    while (m_mapMob.size()!=0) {
         delete m_mapMob.at(0);
         m_mapMob.erase(m_mapMob.begin());
     }
     for (unsigned int m=0;m<m_mobSpawner.size();m++) {
         m_mapMob.push_back(new GameMob(m_mobSpawner[m].type,m_mobSpawner[m].position));
-        m_mapMob.back()->SetColor(GameConfig::NbrToColor(m_mobSpawner[m].color));
     }
 }
 void MapTile::Explode(int x, int y) {
@@ -155,14 +154,17 @@ void MapTile::Draw() {
     }
     //! On affiche les mobs de la carte
     for (unsigned int i=0;i<m_mapMob.size();i++) {
+        cout<<"l";
         if ((m_mapMob.at(i))->isDelete()) {
             delete m_mapMob.at(i);
             m_mapMob.erase( m_mapMob.begin() + i );
-        } else {
+        }
+        else {
             m_mapMob.at(i)->Update();
             m_app->Draw(*(m_mapMob.at(i)));
         }
     }
+    cout<<"e"<<endl ;
     //! On affiche les objets de la carte
     for (unsigned int i=0;i<m_mapEntity.size();i++) {
         if ((m_mapEntity.at(i))->isDelete()) {
@@ -172,6 +174,7 @@ void MapTile::Draw() {
             m_app->Draw(*(m_mapEntity.at(i)));
         }
     }
+    cout<<"p"<<endl ;
 //    //! On affiche les flags de la carte
 //    for (unsigned int i=0;i<m_flag.size();i++) {
 //        m_app->Draw(*(m_flag.at(i)));
@@ -185,6 +188,7 @@ void MapTile::Draw() {
             m_app->Draw(*(m_mapBullet.at(i)));
         }
     }
+
 
     //! On affiche le personnage et ces éléments
     m_app->Draw(*m_player);
@@ -300,11 +304,15 @@ void MapTile::LoadMap() {
                     newMob.color=atoi(elemProp->Attribute("value"));
                 }
             }
-            m_mobSpawner.push_back(newMob);
+            m_mapMob.push_back(new GameMob(newMob.type,newMob.position));
+          //  m_mobSpawner.push_back(newMob);
         }
     }
     //! On charge les mobs
-    RespawnMob();
+    //RespawnMob();
+//    for (unsigned int m=0;m<m_mobSpawner.size();m++) {
+//        m_mapMob.push_back(new GameMob(m_mobSpawner[m].type,m_mobSpawner[m].position));
+//    }
 
     //! Charge le background
     m_background.Create(m_width*tilewidth,m_height*tileheight);

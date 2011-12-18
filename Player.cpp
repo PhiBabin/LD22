@@ -22,12 +22,16 @@ ImgAnim::ImgAnim(GameConfig::g_imgManag["player"].img,GameConfig::g_imgManag["pl
 ,m_app(App)
 ,m_map(map)
 ,m_velx(0),m_vely(0),
-m_jumpLock(false),m_colBot(false),m_hurting(false),m_direction(false),m_lookUp(false),m_moving(false)
+m_jumpLock(false),m_colBot(false),m_hurting(false),m_direction(false),m_lookUp(false),m_moving(false),m_flash(false)
 {
     m_flashlight.SetTexture(GameConfig::g_imgManag["flashlight"].img);
     m_listObject=(*m_map)->GetMapBullet();
    pause();
     setDelay(0.1);
+
+    m_jump.SetBuffer(GameConfig::g_soundManag["jump"]);
+    m_jump.SetVolume(75);
+    m_walking.SetBuffer(GameConfig::g_soundManag["walking"]);
 }
 void Player::MovePlayer(){
     float movHor=0;
@@ -122,6 +126,7 @@ void Player::Gravity(){
 
 void Player::Jump(){
     if(!m_jumpLock){
+        m_jump.Play();
         m_jumpLock=true;
         m_vely+=GameConfig::g_config["jump"];
         SetBottomCollision(false);
@@ -136,7 +141,19 @@ void Player::Turn(bool left, bool right){
     if(!left&&right){
         m_moving=true;
         m_direction=DROITE;
-        m_velx=50;
+        if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Space)){
+            if(m_walkingStop.GetElapsedTime()>3000){
+                m_walking.Play();
+                m_walkingStop.Reset();
+            }
+            m_velx=75;
+            setDelay(0.05);
+        }
+        else {
+            m_walking.Stop();
+            m_velx=10;
+            setDelay(0.2);
+        }
     }
     else{
         m_moving=false;
@@ -210,9 +227,9 @@ void Player::SetMapObject(vector<GameBullet*> *listObject){
 void Player::Degat(int degats){
     if(degats>0){
         if(!m_hurting){
-            m_hurting=true;
+//            m_hurting=true;
             m_blink.Reset();
-            m_hurt.Reset();
+//            m_hurt.Reset();
             m_hp-=degats;
         }
     }
