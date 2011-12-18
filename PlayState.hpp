@@ -38,6 +38,9 @@ class PlayState: public GameState {
         sf::View m_camera;
         sf::Sprite m_interface;
         bool m_start;
+        ImgAnim m_lifebar;
+        sf::Text m_message;
+        sf::Font m_font;
 
         GameKey *m_key;
 

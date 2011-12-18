@@ -2,16 +2,19 @@
 <img>
 	<anim name="player" path="img/player1.png" nbrCollums="4" nbrLines="1" />
 	<anim name="key" path="img/clavier.png" nbrCollums="1" nbrLines="3" />
-	<anim name="items" path="img/items.png" nbrCollums="1" nbrLines="2" />
+	<anim name="items" path="img/items.png" nbrCollums="1" nbrLines="4" />
 	<anim name="explosion" path="img/explosion.png" nbrCollums="6" nbrLines="3" />
 	<anim name="interface" path="img/interface.png" nbrCollums="1" nbrLines="1" />
 	<anim name="flashlight" path="img/flashlight.png" nbrCollums="1" nbrLines="1" />
+	<anim name="fireball" path="img/fireball.png" nbrCollums="6" nbrLines="1" />
+	<anim name="lifebar" path="img/lifebar.png" nbrCollums="1" nbrLines="7" />
+	<anim name="main_menu" path="img/main_menu.png" nbrCollums="1" nbrLines="1" />
+	<anim name="press" path="img/press.png" nbrCollums="1" nbrLines="1" />
 </img>
-<!--<enemies>
+<enemies>
 	<mob name="killyou" type="1" path="0" x="0" y="0" width="13" height="8" />
-	<mob name="truc" type="2" path="1" x="0" y="8" width="9" height="15" />
 </enemies>
-<items>
+<!--<items>
 	<item name="blueflag" type="1" path="0" x="0" y="0" width="13" height="8" color="3"/>
 </items>-->
 <sound>
@@ -31,7 +34,7 @@
 	<option name="playercollheight" value="21" />
 
 	<option name="gravity" value="250" />
-	<option name="jump" value="-150" />
-	<option name="starthp" value="3" />
+	<option name="jump" value="-100" />
+	<option name="starthp" value="6" />
 	<option name="level" value="1" />
 </config>

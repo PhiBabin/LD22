@@ -54,7 +54,7 @@ void GameEngine::loop(){
               }
         }
         m_gameState[m_vip]->loop();
-        m_app.Clear(sf::Color(183, 210, 215, 255));
+        m_app.Clear(sf::Color::Black);
 
         m_gameState[m_vip]->draw();
         m_app.Display();

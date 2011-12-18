@@ -18,12 +18,6 @@ void GameKey::AddKey(sf::Keyboard::Key name, float x1, float y1, float x2, float
     m_icon.push_back(newIcon);
 }
 void GameKey::PressKey(int id){
-    if(m_key[id].shoot){
-       // m_player->Shoot();
-    }
-    if(m_key[id].jump){
-        m_player->Jump();
-    }
 
     if(m_key[id].state==0){
         m_key[id].state=1;
@@ -88,6 +82,36 @@ void GameKey::PressKey(int id){
 
              }
          }
+         if(m_key[id].heart){
+             m_key[id].heart=false;
+             m_player->Degat(-1);
+         }
+
+         if(m_key[id].atomBomb){
+
+             m_key[id].atomBomb=false;
+            m_listObject.push_back(new GameAnim(GameConfig::GameConfig::g_imgManag["explosion"].img,GameConfig::GameConfig::g_imgManag["explosion"].nbrCollum,GameConfig::GameConfig::g_imgManag["explosion"].nbrLine));
+            m_listObject.back()->SetPosition(m_key[id].key.GetPosition());
+            m_listObject.back()->setDelay(0.2);
+            m_listObject.back()->Move(-15,-15);
+            m_listObject.back()->SetScale(3,3);
+
+                if(id>=0 && id<10){
+                    for(int e=0;e<10;e++){
+                        PressKey(e);
+                    }
+                }
+                if(id>=10 && id<19){
+                    for(int e=10;e<19;e++){
+                        PressKey(e);
+                    }
+                }
+                 if(id>=19 && id<27){
+                    for(int e=19;e<27;e++){
+                        PressKey(e);
+                    }
+                }
+         }
     }
 }
 void GameKey::Reload(){
@@ -108,7 +132,7 @@ void GameKey::Reload(){
         if(pItem>=0 && pItem<30){
             m_key[i].reveal=true;
         }
-        if(pItem>=30 && pItem<40){
+        if(pItem>=30 && pItem<35){
             m_key[i].atomBomb=true;
         }
         if(pItem>=40 && pItem<60){
@@ -154,7 +178,15 @@ void GameKey::AddJump(){
 
 void GameKey::Draw(sf::RenderWindow *App, sf::Vector2f camera){
     for(int i=0;i<m_key.size();i++){
-        if(sf::Keyboard::IsKeyPressed( m_key[i].car)) PressKey(i);
+        if(sf::Keyboard::IsKeyPressed( m_key[i].car)){
+            PressKey(i);
+            if(m_key[i].shoot){
+                m_player->Shoot();
+            }
+            if(m_key[i].jump){
+                m_player->Jump();
+            }
+        }
 
         m_key[i].key.SetPosition(camera.x-50+m_key[i].rect.Left*0.25,camera.y+23+m_key[i].rect.Top*0.25);
         App->Draw(m_key[i].key);
@@ -169,6 +201,16 @@ void GameKey::Draw(sf::RenderWindow *App, sf::Vector2f camera){
             }
             if(m_key[i].reveal){
                 m_icon[i].setAnimRow(0);
+                m_icon[i].SetPosition(camera.x-49+m_key[i].rect.Left*0.25,camera.y+4+23+m_key[i].rect.Top*0.25);
+                App->Draw(m_icon[i]);
+            }
+            if(m_key[i].atomBomb){
+                m_icon[i].setAnimRow(2);
+                m_icon[i].SetPosition(camera.x-49+m_key[i].rect.Left*0.25,camera.y+4+23+m_key[i].rect.Top*0.25);
+                App->Draw(m_icon[i]);
+            }
+            if(m_key[i].heart){
+                m_icon[i].setAnimRow(3);
                 m_icon[i].SetPosition(camera.x-49+m_key[i].rect.Left*0.25,camera.y+4+23+m_key[i].rect.Top*0.25);
                 App->Draw(m_icon[i]);
             }

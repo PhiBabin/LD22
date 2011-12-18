@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 /**
     Construction des éléments du jeu
 **/
-PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0)
+PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0),m_lifebar(GameConfig::g_imgManag["lifebar"].img,GameConfig::g_imgManag["lifebar"].nbrCollum,GameConfig::g_imgManag["lifebar"].nbrLine)
 ,m_gameEngine(theGameEngine){
 
 
@@ -80,6 +80,14 @@ PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0)
 
      m_interface.SetTexture(GameConfig::g_imgManag["interface"].img);
      m_interface.SetScale(0.25,0.25);
+
+    m_font.LoadFromFile("font/pixel2.ttf");
+
+     m_message.SetColor(sf::Color::White);
+     m_message.SetString(sf::String("Blablabla... Kill the president... Blabla..."));
+     m_message.SetFont(m_font);
+     m_message.SetCharacterSize(24);
+     m_message.Scale(0.25,0.25);
 }
 /**
     Initialisation des éléments du jeu
@@ -109,7 +117,7 @@ void PlayState::loop(){
 //    m_player->TurnUp(sf::Keyboard::IsKeyPressed(sf::Keyboard::W));
     m_player->Turn(sf::Keyboard::IsKeyPressed(sf::Keyboard::A),sf::Keyboard::IsKeyPressed(sf::Keyboard::D));
 //    //if(sf::Keyboard::IsKeyPressed(sf::Keyboard::N))m_player->Shoot();
-//    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Return))m_key->Reload();
+    if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Return))m_key->Reload();
 
 
 //    const sf::Input &Input =m_gameEngine->m_app.GetInput();
@@ -137,12 +145,16 @@ void PlayState::loop(){
                        );
     m_gameEngine->m_app.SetView(m_camera);
     m_interface.SetPosition(m_camera.GetCenter().x-62, m_camera.GetCenter().y-21+23);
+    m_lifebar.SetPosition(m_camera.GetCenter().x-60, m_camera.GetCenter().y-55);
+    m_lifebar.setAnimRow(6-m_player->GetHp());
+
+    m_message.SetPosition(m_camera.GetCenter().x-60, m_camera.GetCenter().y+12);
 // //! Déplacement des objets
 //    moveObject();
 // //! Déplacement des mobs
 //    moveMob();
 // //! Déplacement des mobs
-//    moveBullet();
+    moveBullet();
 }
 /**
     Pause le jeu
@@ -183,6 +195,8 @@ void PlayState::draw(){
 
     m_gameEngine->m_app.Draw(m_interface);
     m_key->Draw(&(*m_gameEngine).m_app,m_camera.GetCenter());
+    m_gameEngine->m_app.Draw(m_lifebar);
+    m_gameEngine->m_app.Draw(m_message);
 }
 /**
     Déplacement des Mobs

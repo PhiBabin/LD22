@@ -89,6 +89,7 @@ using namespace std;
 #include "Map.cpp"
 
 #include "GameState.cpp"
+#include "MenuState.cpp"
 #include "PlayState.cpp"
 #include "GameEngine.cpp"
 

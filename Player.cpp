@@ -104,7 +104,7 @@ void Player::MovePlayer(){
     }
 
     //! Ouch!
-    if(kill)Degat(200);
+    if(kill)Degat(100);
 
 }
 
@@ -208,11 +208,17 @@ void Player::SetMapObject(vector<GameBullet*> *listObject){
 }
 
 void Player::Degat(int degats){
-    if(!m_hurting){
-        m_hurting=true;
-        m_blink.Reset();
-        m_hurt.Reset();
+    if(degats>0){
+        if(!m_hurting){
+            m_hurting=true;
+            m_blink.Reset();
+            m_hurt.Reset();
+            m_hp-=degats;
+        }
+    }
+    else{
         m_hp-=degats;
+        if(m_hp>6)m_hp=6;
     }
 }
 int Player::GetHp(){
@@ -252,19 +258,10 @@ void Player::UnlockJump(){
 }
 void Player::Shoot(){
     if(m_lastShot.GetElapsedTime()/1000.f>0.3){
-        float velx=0,vely=0;
-        if(m_lookUp==HAUT ){
-                vely=-150;
-        }
-        else{
-            if(m_direction==DROITE)velx=150;
-            else velx=-150;
 
-        }
-
-        m_listObject->push_back(new GameBullet(GameConfig::GameConfig::g_imgManag["bullet"].img,GameConfig::GameConfig::g_imgManag["bullet"].nbrCollum,GameConfig::GameConfig::g_imgManag["bullet"].nbrLine,10,this,velx,vely,true));
+        m_listObject->push_back(new GameBullet(GameConfig::GameConfig::g_imgManag["fireball"].img,GameConfig::GameConfig::g_imgManag["fireball"].nbrCollum,GameConfig::GameConfig::g_imgManag["fireball"].nbrLine,10,this,150,0,true));
         m_listObject->back()->SetPosition(GetPosition().x,GetPosition().y+GameConfig::g_config["playercollheight"]/4);
-        //m_listObject->back()->setDelay(0.1);
+        m_listObject->back()->setDelay(0.1);
         m_lastShot.Reset();
     }
 }
