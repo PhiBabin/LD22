@@ -45,6 +45,7 @@ void EndState::loop(){
     }
     if(m_wait.GetElapsedTime()>8000 && m_win){
         m_gameEngine->m_gameState[0]=new PlayState(m_gameEngine);
+        m_gameEngine->m_gameState[1]=new MenuState(m_gameEngine);
         m_gameEngine->changeState(1);
     }
     (*m_gameEngine).m_app.SetView((*m_gameEngine).m_app.GetDefaultView());

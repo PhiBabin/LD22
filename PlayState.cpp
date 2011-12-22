@@ -76,19 +76,25 @@ PlayState::PlayState(GameEngine* theGameEngine): m_player(0),m_map(0),m_lifebar(
 
     m_camera = m_gameEngine->m_app.GetDefaultView();
     m_camera.Zoom(0.25);
-     m_gameEngine->m_app.SetView(m_camera);
+    m_gameEngine->m_app.SetView(m_camera);
 
-     m_interface.SetTexture(GameConfig::g_imgManag["interface"].img);
-     m_interface.SetScale(0.25,0.25);
+    m_interface.SetTexture(GameConfig::g_imgManag["interface"].img);
+    m_interface.SetScale(0.25,0.25);
 
-     m_light.SetTexture(GameConfig::g_imgManag["light"].img);
+    m_light.SetTexture(GameConfig::g_imgManag["light"].img);
 
     m_font.LoadFromFile("font/pixel2.ttf");
 
-     m_message.SetColor(sf::Color::White);
-     m_message.SetFont(m_font);
-     m_message.SetCharacterSize(24);
-     m_message.Scale(0.25,0.25);
+    m_message.SetColor(sf::Color::White);
+    m_message.SetFont(m_font);
+    m_message.SetCharacterSize(24);
+    m_message.Scale(0.25,0.25);
+
+    m_space.SetColor(sf::Color::White);
+    m_space.SetFont(m_font);
+    m_space.SetCharacterSize(16);
+    m_space.SetString("Use SPACE to sprint");
+    m_space.Scale(0.25,0.25);
 
 
     m_music.OpenFromFile("sounds/music.wav");
@@ -134,7 +140,7 @@ void PlayState::loop(){
     }
     if(m_level==3){
         m_message.SetString("Goal: Shoot everything that move");
-        if(m_player->GetPosition().x>880.f){
+        if(m_player->GetPosition().x>940.f){
             m_levelup.Play();
             m_level=4;
         }
@@ -197,13 +203,15 @@ void PlayState::loop(){
                        m_player->GetPosition().y+40.f
                        );
     m_gameEngine->m_app.SetView(m_camera);
-    m_interface.SetPosition(m_camera.GetCenter().x-62, m_camera.GetCenter().y-21+23);
+    m_interface.SetPosition(m_camera.GetCenter().x-62.5, m_camera.GetCenter().y-21+23);
     m_lifebar.SetPosition(m_camera.GetCenter().x-60, m_camera.GetCenter().y-55);
     m_lifebar.setAnimRow(6-m_player->GetHp());
 
     m_light.SetPosition(m_camera.GetCenter().x-63, m_camera.GetCenter().y-57);
 
     m_message.SetPosition(m_camera.GetCenter().x-60, m_camera.GetCenter().y+12);
+
+    m_space.SetPosition(m_camera.GetCenter().x-60, m_camera.GetCenter().y-4);
 // //! Déplacement des objets
     moveObject();
 // //! Déplacement des mobs
@@ -252,6 +260,9 @@ void PlayState::draw(){
     m_key->Draw(&(*m_gameEngine).m_app,m_camera.GetCenter());
     m_gameEngine->m_app.Draw(m_light);
     m_gameEngine->m_app.Draw(m_lifebar);
+
+    if(m_level!=1)m_gameEngine->m_app.Draw(m_space);
+
     m_gameEngine->m_app.Draw(m_message);
 }
 /**

@@ -138,7 +138,7 @@ void Player::TurnUp(bool up){
 }
 void Player::Turn(bool left, bool right){
 
-    if(!left&&right){
+    if(right){
         m_moving=true;
         m_direction=DROITE;
         if(sf::Keyboard::IsKeyPressed(sf::Keyboard::Space)){
@@ -247,6 +247,7 @@ void Player::SetHp(int nhp){
 bool Player::IsDead(){
     if(m_hp<=0){
         m_hp=GameConfig::g_config["starthp"];
+        m_walking.Stop();
         return true;
     }
     else return false;

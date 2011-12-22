@@ -36,11 +36,11 @@ class PlayState: public GameState {
         Player *m_player;
         MapTile *m_map;
         sf::View m_camera;
-        sf::Sprite m_interface;
-        sf::Sprite m_light;
+        sf::Sprite m_interface, m_light;
         bool m_start;
         ImgAnim m_lifebar;
         sf::Text m_message;
+        sf::Text m_space;
         sf::Font m_font;
         int m_level;
         sf::Music m_music;

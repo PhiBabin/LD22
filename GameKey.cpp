@@ -122,16 +122,16 @@ void GameKey::Reload(){
         m_key[i].visible=false;
 
         pItem=rand() % 100 + 1;
-        if(pItem>=0 && pItem<40){
+        if(pItem>=0 && pItem<20){
             m_key[i].reveal=true;
         }
-        if(pItem>=40 && pItem<45){
-            m_key[i].atomBomb=true;
-        }
-        if(pItem>=50 && pItem<60){
+        if(pItem>=20 && pItem<40){
             m_key[i].heart=true;
         }
-        if(pItem>=60 && pItem<90){
+        if(pItem>=60 && pItem<70){
+            m_key[i].atomBomb=true;
+        }
+        if(pItem>=70 && pItem<100){
             m_key[i].bomb=true;
         }
     }
